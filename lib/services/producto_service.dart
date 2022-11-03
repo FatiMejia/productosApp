@@ -4,6 +4,7 @@ import '../models/producto.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:io';
 
 class ProductoService extends ChangeNotifier{
   
@@ -15,6 +16,7 @@ class ProductoService extends ChangeNotifier{
   bool  isSaving = false;
 
   Producto? productoSeleccionado;
+  File? pictureFile;
 
   //constructor
   ProductoService(){
@@ -89,5 +91,13 @@ class ProductoService extends ChangeNotifier{
     this.productos.add(producto);
     
     return producto.id!;
+  }
+
+  //metodo para actualizar la imagen del producto
+  void actualizarImagenProducto(String path) {
+    this.productoSeleccionado!.imagen = path;
+    this.pictureFile = File.fromUri(Uri(path: path));
+
+    notifyListeners();
   }
 }

@@ -5,6 +5,7 @@ import 'package:productos_app/providers/producto_form_provider.dart';
 import 'package:productos_app/services/producto_service.dart';
 import 'package:productos_app/widgets/imagen_producto.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProductoPage extends StatelessWidget {
 
@@ -47,7 +48,7 @@ class _ProductoPageBody extends StatelessWidget {
                       icon: Icon(
                         Icons.arrow_back_ios,
                         size: 40,
-                        color: Colors.white,
+                        color: Color.fromARGB(255, 224, 224, 224),
                       ),
                       onPressed: () => 
                       Navigator.of(context).pop(),
@@ -60,9 +61,22 @@ class _ProductoPageBody extends StatelessWidget {
                       icon: Icon(
                         Icons.camera_alt_outlined,
                         size: 40,
-                        color: Colors.white,
+                        color: Color.fromARGB(255, 237, 237, 237),
                       ),
-                      onPressed: (){},
+                      onPressed: () async{
+                        final picker = new ImagePicker();
+                        final PickedFile? pickedFile = 
+                          await picker.getImage(
+                            source: ImageSource.camera,
+                            imageQuality: 100,
+                          );
+                          if(pickedFile == null){
+                            print("No se selecciono nada");
+                            return;
+                          }
+                          print('Imagen: ${pickedFile.path}');
+                          productoService.actualizarImagenProducto(pickedFile.path);
+                      },
                     ),
                     top: 60,
                     right: 20,
