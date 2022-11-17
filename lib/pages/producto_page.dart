@@ -95,6 +95,10 @@ class _ProductoPageBody extends StatelessWidget {
         ),
         onPressed: () async {
           if(!productoForm.isValidForm()) return;
+          final String? imagenUrl = await productoService.uploadImage();
+          if(imagenUrl != null){
+            productoForm.producto.imagen = imagenUrl;
+          }
           await productoService.saveOrCreateProducto(productoForm.producto);
         },
       ),

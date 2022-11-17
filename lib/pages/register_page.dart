@@ -2,11 +2,12 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:productos_app/providers/login_form_provider.dart';
+import 'package:productos_app/services/auth_service.dart';
 import 'package:productos_app/widgets/card_container.dart';
 import 'package:productos_app/widgets/fondo_login.dart';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatelessWidget {
+class RegisterPage extends StatelessWidget {
   //const LoginPage({Key? key}) : super(key: key);
 
   @override
@@ -24,7 +25,7 @@ class LoginPage extends StatelessWidget {
                       height: 10,
                     ),
                     Text(
-                      'Login',
+                      'Register',
                       style: Theme.of(context).textTheme.headline4,
                     ),
                     SizedBox(
@@ -40,15 +41,15 @@ class LoginPage extends StatelessWidget {
               SizedBox(
                 height: 50,
               ),
-              TextButton(
+             TextButton(
                 child: Text(
-                  'Crear una nueva cuenta',
+                  '¿Ya tienes una cuenta?',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                onPressed: () => Navigator.pushReplacementNamed(context, 'register'),
+                onPressed: () => Navigator.pushReplacementNamed(context, 'login'),
               ),
             ],
           ),
@@ -153,11 +154,21 @@ class _LoginForm extends StatelessWidget {
               onPressed: loginForm.isLoading ? null
               : () async {
                 FocusScope.of(context).unfocus(); 
+                final authService = Provider.of<AuthService>(context, listen: false);
                 if(!loginForm.isValidForm()) return;
                 loginForm.isLoading = true;
-                await Future.delayed(Duration(seconds: 2));
+                //await Future.delayed(Duration(seconds: 2));
+
+                final String? resp = await authService.crearUsuario(loginForm.email, loginForm.password);
+
+                if(resp == null){
+                  Navigator.pushReplacementNamed(context, 'home');
+                } else {
+                  print(resp);
+                }
+
                 loginForm.isLoading = false;
-                Navigator.pushReplacementNamed(context, 'home');
+                
               },
             )
           ],
