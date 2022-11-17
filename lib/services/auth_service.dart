@@ -29,4 +29,26 @@ class AuthService extends ChangeNotifier{
       return decodedResp['error']['message'];
     }
   }
+
+
+  //metodo para iniciar Sesion
+  Future<String?> login (String email, String password)async{
+    final Map<String,dynamic> authData = {
+      'email' : email,
+      'password' : password
+    };
+
+    final url = 
+    Uri.https(_baseUrl, '/v1/accounts:signInWithPassword', {'key':_firebaseKey});
+    final resp = await http.post(url, body: json.encode(authData));
+
+    final Map<String, dynamic> decodedResp = json.decode(resp.body);
+    print(decodedResp);
+
+    if(decodedResp.containsKey('idToken')){
+      return null;
+    } else {
+      return decodedResp['error']['message'];
+    }
+  }
 }
